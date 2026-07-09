@@ -1,15 +1,23 @@
+import {
+  Header,
+  EditorPanel,
+  SchemaPanel,
+  OutputPanel,
+} from "@/widgets/workspace/components";
+
 export function Workspace() {
   return (
-    <main className="min-h-screen bg-slate-950">
-      <div className="mx-auto max-w-7xl p-6">
-        <h1 className="text-4xl font-bold text-white">
-          QueryFlow 🚀
-        </h1>
+    <>
+      <Header />
 
-        <p className="mt-2 text-slate-400">
-          Interactive SQL Learning Platform
-        </p>
-      </div>
-    </main>
+      <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col gap-6 p-6">
+        <section className="grid flex-1 grid-cols-1 gap-6 lg:grid-cols-2">
+          <EditorPanel />
+          <SchemaPanel />
+        </section>
+
+        <OutputPanel />
+      </main>
+    </>
   );
 }
