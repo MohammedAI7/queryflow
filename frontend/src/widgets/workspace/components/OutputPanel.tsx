@@ -1,44 +1,72 @@
 import { Panel } from "@/shared/ui/panel";
-
-import { outputColumns } from "@/shared/config/mock/output";
+import { useQueryRunnerStore } from "@/features/query-runner";
 
 export function OutputPanel() {
+  const { columns, rows, error, isRunning } = useQueryRunnerStore();
+
+  if (isRunning) {
+    return (
+      <Panel title="Query Output">
+        <div className="flex h-40 items-center justify-center text-emerald-300">
+          Running query...
+        </div>
+      </Panel>
+    );
+  }
+
+  if (error) {
+    return (
+      <Panel title="Query Output">
+        <div className="rounded-lg border border-red-900 bg-red-950 p-4 text-red-300">
+          {error}
+        </div>
+      </Panel>
+    );
+  }
+
+  if (columns.length === 0) {
+    return (
+      <Panel title="Query Output">
+        <div className="flex h-40 items-center justify-center text-slate-500">
+          Run a query to see the results.
+        </div>
+      </Panel>
+    );
+  }
+
   return (
     <Panel title="Query Output">
-      <div className="min-h-[220px] overflow-hidden rounded-lg border border-emerald-900">
+      <div className="overflow-auto rounded-lg border border-emerald-950">
         <table className="w-full border-collapse text-sm">
           <thead className="bg-emerald-950">
             <tr>
-              {outputColumns.map((outputColumns) => (
+              {columns.map((column) => (
                 <th
-                  key={outputColumns}
-                  className="border-b border-slate-800 px-4 py-3 text-left font-medium text-emerald-100"
+                  key={column}
+                  className="border-b border-emerald-900 px-4 py-3 text-left font-semibold text-emerald-200"
                 >
-                  {outputColumns}
+                  {column}
                 </th>
               ))}
             </tr>
           </thead>
 
           <tbody>
-                        <tr>
-              <td
-                colSpan={outputColumns.length}
-                className="px-4 py-10"
+            {rows.map((row, index) => (
+              <tr
+                key={index}
+                className="border-b border-emerald-950 hover:bg-emerald-950/40"
               >
-                <div className="flex flex-col items-center gap-4 text-center">
-                  <p className="text-emerald-300 font-medium">
-                    Run a SQL query to see results.
-                  </p>
-
-                  <div className="flex gap-8 text-sm text-emerald-500">
-                    <span>Execution Time: --</span>
-                    <span>Rows: --</span>
-                    <span>Columns: --</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
+                {columns.map((column) => (
+                  <td
+                    key={column}
+                    className="px-4 py-3 text-emerald-100"
+                  >
+                    {String(row[column] ?? "")}
+                  </td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
