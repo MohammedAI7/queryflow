@@ -1,16 +1,17 @@
-/**
- * TODO (Milestone 5)
- * Replace regex implementation with parser/token-based transformation.
- * Current implementation is intentionally not used.
- */
-import { SQL_KEYWORDS } from "./sqlKeywords";
+import { format } from "sql-formatter";
 
-export function transformKeywords(query: string): string {
-  return query.replace(/\b[a-zA-Z][a-zA-Z0-9_]*\b/g, (word) => {
-    const upperWord = word.toUpperCase();
-
-    return SQL_KEYWORDS.has(upperWord)
-      ? upperWord
-      : word;
-  });
+export function formatQuery(
+  query: string,
+  uppercaseKeywords = true,
+): string {
+  try {
+    return format(query, {
+      language: "sql",
+      keywordCase: uppercaseKeywords ? "upper" : "lower",
+      tabWidth: 2,
+      linesBetweenQueries: 1,
+    });
+  } catch {
+    return query;
+  }
 }
